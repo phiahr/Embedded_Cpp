@@ -11,26 +11,15 @@
 int main(int argc, char **argv)
 {
     std::string file_name = argv[1];
-
     std::ifstream fin(file_name, std::ios::in);
 
-    std::string line;
-
     std::map<std::string, double> hMap;
+    std::string id;
+    double value;
+    
+    while (fin >> id >> value)
+        hMap[id] =  value;
 
-    while (std::getline(fin, line))
-    {
-        std::string id;
-        double value;
-        std::istringstream stream(line);
-        stream >> id >> value;
-        hMap[id] = value;
-    }
-
-    // for (auto it = hMap.begin(); it != hMap.end(); it++)
-    // {
-    //     std::cout << it->first << " " << it->second << std::endl;
-    // }
     std::string qin;
 
     while(1)
@@ -38,16 +27,15 @@ int main(int argc, char **argv)
         std::cout << "query> ";
         std::cin >> qin;
 
-
         if (qin == "END") break;
-
-        if (hMap.find(qin) != hMap.end()) {
-        // found
+        if (hMap.find(qin) != hMap.end())
+        {
+            // found
             std::cout << "value[" << qin << "]= " << hMap[qin] << std::endl; 
         }
         else 
         {
-        // not found
+            // not found
             std::cout << "This ID does not exist" << std::endl;
         }
     }
