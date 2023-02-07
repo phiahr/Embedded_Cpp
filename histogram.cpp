@@ -81,40 +81,37 @@ int main(int argc, char **argv) {
             << ", median = " << median
             << ", mean = " << mean << std::endl;
 
-
-  // create hash map to store value inside
-  std::map<int,int> histogram;
-  int largestSlice = 0;
-  int indexOfLargestSlice = 0;
-
+  // vector to store the count of numbers that fit in a given bucket
+  std::vector<int> buckets;
   for (int i = 0; i < buf[buf.size()-1]; i+=100)
   {
-    histogram[i] = 0;
+    int count = 0;
     while (1)
     {
-      if (buf.size() == 0) break;
-
       // not part of the bucket anymore, so break out
       if (buf.size() == 0 || buf[0] >= i+100)
       {
-        largestSlice = (largestSlice < histogram[i]) ? histogram[i] : largestSlice;
+        buckets.push_back(count);
         break;
       }
       else
       {
-        histogram[i] += 1;
+        // add element to bucket by increasing count and remove it from buffer
+        count++;
         buf.erase(buf.begin());
       }
-
     }
   }
-  for (auto it = histogram.begin(); it != histogram.end(); it++)
+  int j = 0;
+  std::vector<int>::iterator largestBucket;
+  largestBucket = std::max_element(buckets.begin(), buckets.end());
+
+  for (int i = 0; i < buckets.size(); i++)
   {
     // number of stars is proportional to the largest number having 60 stars
-    int starsCount = ((float)it->second/(float)largestSlice)*60;
+    int starsCount = ((float)buckets[i] / (float)*largestBucket)*60;
 
     // getWhiteSpaces() to right align the numbers that have less digits than the maximum numbers 
-    std::cout << std::string(getWhiteSpaces(it->first,histogram.rbegin()->first), ' ') << it->first << "\t" << std::string(getWhiteSpaces(it->second,largestSlice), ' ') << it->second << " " << std::string(starsCount, '*') << std::endl;
+    std::cout << std::string(getWhiteSpaces(i*100, buckets.size()*100), ' ') << i*100 << "\t" << std::string(getWhiteSpaces(buckets[i], *largestBucket), ' ') << buckets[i] << " " << std::string(starsCount, '*') << std::endl;
   }
-
 }
