@@ -1,25 +1,23 @@
 #include <string>
-#include <vector>
 #include <fstream>
 #include <iostream>
-#include <iomanip>
 #include <sstream>
-// #include <algorithm>
 #include <map>
-// #include <cmath>
+#include <unordered_map>
 
 int main(int argc, char **argv)
 {
     std::string file_name = argv[1];
     std::ifstream fin(file_name, std::ios::in);
 
-    std::map<std::string, double> hMap;
+    std::unordered_map<std::string, double> hmap;
     std::string id;
     double value;
     
     while (fin >> id >> value)
-        hMap[id] =  value;
-
+    {
+        hmap[id] =  value;
+    }
     std::string qin;
 
     while(1)
@@ -28,10 +26,10 @@ int main(int argc, char **argv)
         std::cin >> qin;
 
         if (qin == "END") break;
-        if (hMap.find(qin) != hMap.end())
+        if (hmap.find(qin) != hmap.end())
         {
             // found
-            std::cout << "value[" << qin << "]= " << hMap[qin] << std::endl; 
+            std::cout << "value[" << qin << "]= " << hmap[qin] << std::endl; 
         }
         else 
         {
