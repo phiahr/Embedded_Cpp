@@ -1,25 +1,25 @@
 #include <string>
-#include <vector>
 #include <fstream>
 #include <iostream>
-#include <iomanip>
 #include <sstream>
-// #include <algorithm>
 #include <map>
-// #include <cmath>
+#include <unordered_map>
 
 int main(int argc, char **argv)
 {
     std::string file_name = argv[1];
     std::ifstream fin(file_name, std::ios::in);
 
-    std::map<std::string, double> hMap;
+    std::unordered_map<std::string, double> hmap;
     std::string id;
     double value;
-    
-    while (fin >> id >> value)
-        hMap[id] =  value;
 
+    std::multimap<double, std::string> mmap;
+    while (fin >> id >> value)
+    {
+        hmap[id] =  value;
+        mmap.insert({value, id});
+    }
     std::string qin;
 
     while(1)
@@ -28,44 +28,29 @@ int main(int argc, char **argv)
         std::cin >> qin;
 
         if (qin == "END") break;
-        if (qin[0] == '+')
-        {
-            double v;
-            try
-            {
-                v = std::stod(qin);
-                bool foundValue = false;
-                for (const auto& pair : hMap)
-                {
-                    if (pair.second > v-0.01*v && pair.second < v+0.01*v)
-                    {
-                        std::cout << "value[" << pair.first << "]= " << pair.second << std::endl;
-                        foundValue = true;
-                    }
+        if (qin[0] == '+') {
+            double v = std::stod(qin);
+            auto lower_bound = mmap.lower_bound(v-0.01*v);
+            auto upper_bound = mmap.upper_bound(v+0.01*v);
+            if (lower_bound==upper_bound)
+                std::cout << "No ID for the given value" << std::endl;
+            else {
+                for (auto it = lower_bound; it != upper_bound; it++)
+                    std::cout << "value[" << it->second << "]= " << it->first << std::endl;
                 }
-                if (!foundValue)
-                {
-                    std::cout << "This ID does not exist" << std::endl;
-                }
-            }
-            catch(const std::exception& e)
-            {
-                std::cerr << "Invalid Value" << '\n';
-            }
         }
         else {
-        if (hMap.find(qin) != hMap.end())
-        {
-            // found
-            std::cout << "value[" << qin << "]= " << hMap[qin] << std::endl; 
+            if (hmap.find(qin) != hmap.end())
+            {
+                // found
+                std::cout << "value[" << qin << "]= " << hmap[qin] << std::endl; 
+            }
+            else
+            {
+                // not found
+                std::cout << "This ID does not exist" << std::endl;
+            }
         }
-        else
-        {
-            // not found
-            std::cout << "This ID does not exist" << std::endl;
-        }
-        }
-        
     }
     std::cout << "Bye..." << std::endl;
 }
