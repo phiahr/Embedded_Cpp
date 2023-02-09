@@ -1,7 +1,5 @@
 #include <iostream>
-#include <vector>
 #include <random>
-#include <iomanip>
 #include <fstream>
 
 int main(int argc, char **argv)
@@ -26,7 +24,7 @@ int main(int argc, char **argv)
 
     std::random_device rd;
     std::mt19937 generator(rd());
-    std::lognormal_distribution<> distribution(7.445, 0.58);
+    std::lognormal_distribution<> distribution(7.453, 0.648);
 
     std::fstream file;
     file.open(file_name, std::ios_base::out);
